@@ -10,13 +10,13 @@ namespace PassOne.Service
 {
     internal class CredentialsSoapSerializer : SoapSerializerBaseImpl
     {
-
         public override string FileName
         {
-            get { return DirectoryPath + "data.bin"; }
+            get { return DirectoryPath + "data\\data.bin"; }
         }
 
         private readonly User _myUser;
+
         public User MyUser
         {
             get { return _myUser; }
@@ -57,12 +57,5 @@ namespace PassOne.Service
                 Console.WriteLine("Object is not a Credentials");
             }
         }
-
-        public override void DeleteValue(object obj)
-        {
-            ((Credentials)obj).Decrypt(_myUser.Encryption);
-            base.DeleteValue(obj);
-        }
     }
-
 }

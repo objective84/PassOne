@@ -32,6 +32,7 @@ namespace PassOne.Domain
 
         public Credentials(string title, string url, string username, string password, string email, int id = 0 )
         {
+            CheckForMissingInformation(title, username, password, email);
             Id = id;
             Website = title;
             Url = url;
@@ -55,6 +56,15 @@ namespace PassOne.Domain
             EncryptedEmail = email;
         }
 
+        private void CheckForMissingInformation(string title, string username, string password, string email)
+        {
+            if (title == string.Empty)
+                throw new MissingInformationException("a website name");
+            if (username == string.Empty && email == string.Empty)
+                throw new MissingInformationException("a username or email address");
+            if (password == string.Empty)
+                throw new MissingInformationException("a password");
+        }
         /// <summary>
         /// Method to encrypt the contents of this credentials object, clears all string data when complete.
         /// </summary>

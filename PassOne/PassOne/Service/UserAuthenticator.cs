@@ -8,6 +8,10 @@ namespace PassOne.Service
 {
    internal class UserAuthenticator : UserSoapSerializer, IAuthenticatorSvc
     {
+       public UserAuthenticator()
+       {
+       }
+
        public User Authenticate(string username, string password)
        {
            var user = RetrieveByUsername(username);

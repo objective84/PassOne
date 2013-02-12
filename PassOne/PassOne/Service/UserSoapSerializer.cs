@@ -11,7 +11,7 @@ namespace PassOne.Service
 {
     internal class UserSoapSerializer : SoapSerializerBaseImpl
     {
-        public override string FileName { get { return DirectoryPath + "users.bin"; } }
+        public override string FileName { get { return DirectoryPath +  "data\\users.bin"; } }
 
         //Constructors
         public UserSoapSerializer()

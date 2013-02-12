@@ -9,37 +9,38 @@ namespace PassOne.Business
 {
     public static class UserManager
     {
-        public static void CreateUser(string fn, string ln, string un, string pass)
+
+        public static void CreateUser(string path, string fn, string ln, string un, string pass)
         {
-            GetUserService().UpdateTable(new User(GetUserService().GetNextIdValue(), fn, ln, un, pass));
+            GetUserService(path).UpdateTable(new User(GetUserService(path).GetNextIdValue(), fn, ln, un, pass));
         }
 
-        public static void CreateUser(User user)
+        public static void CreateUser(User user, string path )
         {
-            GetUserService().UpdateTable(user);
+            GetUserService(path).UpdateTable(user);
         }
 
-        public static void UpdateUser(this User user)
+        public static void UpdateUser(this User user, string path)
         {
-            GetUserService().UpdateTable(user);
+            GetUserService(path).UpdateTable(user);
         }
 
-        public static User Authenticate(string username, string password)
+        public static User Authenticate(string username, string password, string path)
         {
             var factory = new SoapFactory();
-            var authenticator = factory.GetService(Services.UserAuthenticator) as IAuthenticatorSvc;
+            var authenticator = factory.GetService(Services.UserAuthenticator, path) as IAuthenticatorSvc;
             return authenticator.Authenticate(username, password);
         }
 
-        public static IList<string> GetCredentialsList(this User user)
+        public static IList<string> GetCredentialsList(this User user, string path)
         {
-            return (from string id in user.CredentialsList.Keys select user.FindCredentials((int) user.CredentialsList[id]).Website).ToList();
+            return (from string id in user.CredentialsList.Keys select user.FindCredentials((int) user.CredentialsList[id], path).Website).ToList();
         }
 
-        private static ISerializeSvc GetUserService()
+        private static ISerializeSvc GetUserService(string path)
         {
             var factory = new SoapFactory();
-            return factory.GetService(Services.UserSoapSerializer) as ISerializeSvc;
+            return factory.GetService(Services.UserSoapSerializer, path) as ISerializeSvc;
         }
     }
 }

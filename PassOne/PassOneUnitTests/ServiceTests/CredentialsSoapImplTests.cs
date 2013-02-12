@@ -16,7 +16,7 @@ namespace PassOneUnitTests.ServiceTests
         //Constructor
         public CredentialsSoapImplTests()
         {
-            _credSrv = Factory.GetService(Services.CredentialsSoapSerializer, TestUser) as ISerializeSvc;
+            _credSrv = Factory.GetService(Services.CredentialsSoapSerializer, Path, TestUser) as ISerializeSvc;
         }
 
         //Setup and TearDown
@@ -28,8 +28,7 @@ namespace PassOneUnitTests.ServiceTests
         [TestCleanup]
         public void Dispose()
         {
-            Directory.Delete(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) +
-                             "//PassOne", true);
+            Directory.Delete(Path, true);
         }
 
         /// <summary>

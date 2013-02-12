@@ -56,9 +56,9 @@ namespace PassOneUnitTests.BusinessTests
         [TestInitialize()]
         public void MyTestInitialize()
         {
-            if (!Directory.Exists(Path))
-                Directory.CreateDirectory(Path);
-            Stream = new FileStream(Path + "data.bin", FileMode.Create, FileAccess.ReadWrite);
+            if (!Directory.Exists(Path + "data"))
+                Directory.CreateDirectory(Path+ "data");
+            Stream = new FileStream(Path + "data\\data.bin", FileMode.Create, FileAccess.ReadWrite);
         }
         
         //Use TestCleanup to run code after each test has run
@@ -66,8 +66,7 @@ namespace PassOneUnitTests.BusinessTests
         public void MyTestCleanup()
         {
             Stream.Close();
-            Directory.Delete(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) +
-                                    "//PassOne", true);
+            Directory.Delete(Path, true);
         }
         
         #endregion
@@ -82,8 +81,8 @@ namespace PassOneUnitTests.BusinessTests
             Stream.Close();
             var user = TestUser; 
             var creds = TestCredentials;
-            user.Create(TestCredentials);
-            Stream = new FileStream(Path + "data.bin", FileMode.Open, FileAccess.Read);
+            user.Create(TestCredentials, Path);
+            Stream = new FileStream(Path + "data\\data.bin", FileMode.Open, FileAccess.Read);
             var table = Soap.Deserialize(Stream) as Hashtable;
             var expected = creds;
             var actual = table[TestCredentials.Id];
@@ -105,8 +104,10 @@ namespace PassOneUnitTests.BusinessTests
             Soap.Serialize(Stream, table);
             Stream.Close();
 
-            creds.Delete(user);
-            Assert.AreEqual(0, user.CredentialsList.Count);
+            creds.Delete(user, Path);
+            Stream = new FileStream(Path + "data\\data.bin", FileMode.Open, FileAccess.Read);
+            table = Soap.Deserialize(Stream)as Hashtable;
+            Assert.AreEqual(0, table.Count);
 
         }
 
@@ -125,7 +126,7 @@ namespace PassOneUnitTests.BusinessTests
             Stream.Close();
             expected.Decrypt(user.Encryption);
 
-            Credentials actual = user.FindCredentials(id);
+            Credentials actual = user.FindCredentials(id, Path);
             Assert.AreEqual(expected, actual);
         }
 
@@ -141,10 +142,10 @@ namespace PassOneUnitTests.BusinessTests
             Soap.Serialize(Stream, table);
             Stream.Close();
             creds.Username = TestCredentials2.Username;
-            creds.Update(user);
+            creds.Update(user, Path);
             var expected = TestCredentials2.Username;
 
-            Stream = new FileStream(Path + "data.bin", FileMode.Open, FileAccess.Read);
+            Stream = new FileStream(Path + "data\\data.bin", FileMode.Open, FileAccess.Read);
             table = Soap.Deserialize(Stream) as Hashtable;
             creds = ((Credentials) table[TestCredentials.Id]);
             creds.Decrypt(user.Encryption);

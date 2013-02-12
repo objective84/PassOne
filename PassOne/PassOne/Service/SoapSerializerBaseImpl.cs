@@ -6,30 +6,31 @@ using System.Linq;
 using System.Runtime.Serialization.Formatters.Soap;
 using System.Text;
 using System.Windows.Forms;
+using PassOne.Domain;
 
 namespace PassOne.Service
 {
     public abstract class SoapSerializerBaseImpl : ISerializeSvc
     {
-        protected static string DirectoryPath
+        protected string DirectoryPath;
+        public string TempPath
         {
-            get
-            {
-                return Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) +
-                       "//PassOne//data//";
-            }
+            get { return DirectoryPath + "data\\temp.bin"; }
         }
-        protected readonly string TempPath = DirectoryPath + "temp.bin";
 
         public abstract string FileName { get; }
-
+        
+        public void SetPath(string path)
+        {
+            DirectoryPath = path;
+        }
         protected Hashtable RetrieveTable()
         {
             var soap = new SoapFormatter();
             try
             {
                 //Check if directory exists, if not create it.
-                if (!Directory.Exists(DirectoryPath)) Directory.CreateDirectory(DirectoryPath);
+                if (!Directory.Exists(DirectoryPath)) Directory.CreateDirectory(DirectoryPath + "data");
                 
                 //Check if file exists, if not create it.
                 if (!File.Exists(FileName))
@@ -71,11 +72,14 @@ namespace PassOne.Service
             foreach (var key in values.Keys)
                 temp.Add(key, values[key]);
 
-            foreach (var value in temp.Cast<object>().Where(value => value.Equals(obj)))
+            foreach (var key in temp.Keys)
             {
-                values.Remove(value);
-                break;
+                if (obj.Equals(temp[key]))
+                {
+                    values.Remove(key);
+                }
             }
+
             Store(values);
         }
 

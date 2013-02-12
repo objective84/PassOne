@@ -23,6 +23,7 @@ namespace PassOne.Domain
 
         public User(int id, string first, string last, string user, string pass)
         {
+            CheckForMissingInformation(first, last, user, pass);
             Id = id;
             FirstName = first;
             LastName = last;
@@ -41,6 +42,18 @@ namespace PassOne.Domain
             Password = pass;
             CredentialsList = list;
             Encryption = new Encryption();
+        }
+
+        private void CheckForMissingInformation(string fn, string ln, string username, string password)
+        {
+            if (fn == string.Empty)
+                throw new MissingInformationException("your first name");
+            if (ln == string.Empty)
+                throw new MissingInformationException("your last name");
+            if (username == string.Empty)
+                throw new MissingInformationException("a username");
+            if (password == string.Empty)
+                throw new MissingInformationException("a password");
         }
 
         public override bool Equals(object obj)

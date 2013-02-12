@@ -9,8 +9,7 @@ namespace PassOneUnitTests
 {
    public abstract class PassOneTests
    {
-       public string Path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) +
-                            "//PassOne//data//";
+       public static string Path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\PassOneTests\\";
        protected readonly SoapFactory Factory;
        protected readonly User TestUser = new User(1, "Peter", "Varner-Howland", "pvarnerhowland", "testPass321");
        protected readonly User TestUser2 = new User(2, "Arwen", "Varner-Howland", "avarnerhowland", "testPass123");

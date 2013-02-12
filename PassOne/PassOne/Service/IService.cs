@@ -7,5 +7,6 @@ namespace PassOne.Service
 {
     public interface IService
     {
+        void SetPath(string path);
     }
 }

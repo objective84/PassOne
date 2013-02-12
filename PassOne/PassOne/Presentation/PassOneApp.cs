@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Windows.Forms;
 using PassOne.Domain;
 using PassOne.Business;
 
@@ -11,37 +12,27 @@ namespace PassOne.Presentation
     {
         private User _myUser;
         private IList<string> _credentialsList;
-        private PassOne _app;
+        private PassOneMainScreen _app;
 
-        public event EventHandler OnCredentialsListUpdated;
+        public PassOneApp(){}
 
-        public PassOneApp(PassOne app)
+        public PassOneApp(PassOneMainScreen app)
         {
-            OnCredentialsListUpdated += PassOneApp_OnCredentialsListUpdated;
             _credentialsList = new List<string>();
             _myUser = new User();
             _app = app;
         }
 
-        public PassOneApp(PassOne app, User user)
+        public PassOneApp(PassOneMainScreen app, User user)
         {
-            OnCredentialsListUpdated += PassOneApp_OnCredentialsListUpdated;
             _myUser = user;
             _app = app;
-            //Test Code
-            //_myUser.CreateUser(new Credentials("Regis WorldClass", "https://worldclass.regis.edu/",
-            //                                                 "pvarnerhowland",
-            //                                                 "testpass123", "pvarnerhowland@regis.edu"));
-            //_myUser.CreateUser(new Credentials("Regis InSite", "https://in2.regis.edu/CookieAuth.dll?GetLogon?curl=Z2F&reason=0&formdir=6",
-            //                                                 "pvarnerhowland",
-            //                                                 "testpass456", "pvarnerhowland@regis.edu"));
-            //Test Code
             BuildCredentialsList(_myUser);
         }
 
         public void BuildCredentialsList(User user)
         {
-            _credentialsList = user.GetCredentialsList();
+            _credentialsList = user.GetCredentialsList(PassOneMainScreen.Path);
             foreach (var cred in _credentialsList)
                 _app.CredentialsListBox.Items.Add(cred);
         }
@@ -50,24 +41,43 @@ namespace PassOne.Presentation
         {
             if (!_credentialsList.Contains(creds.Website))
             {
-                OnCredentialsListUpdated(creds.Website, null);
-                _myUser.Create(creds);
+
+                _app.CredentialsListBox.Items.Add(creds.Website);
+                _myUser.Create(creds, PassOneMainScreen.Path);
             }
             else
             {
                 creds.Id = (int) _myUser.CredentialsList[creds.Website];
-                creds.Update(_myUser);
+                creds.Update(_myUser, PassOneMainScreen.Path);
             }
         }
 
         public Credentials GetCredentials(string name)
         {
-            return _myUser.FindCredentials((int)_myUser.CredentialsList[name]);
+            return _myUser.FindCredentials((int)_myUser.CredentialsList[name], PassOneMainScreen.Path);
         }
 
-        void PassOneApp_OnCredentialsListUpdated(object sender, EventArgs e)
+        public string CreateRandomPassword(int passwordLength)
         {
-            _app.CredentialsListBox.Items.Add(sender);
+            string allowedChars = "abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNOPQRSTUVWXYZ0123456789!@$?_-";
+            char[] chars = new char[passwordLength];
+            Random rd = new Random();
+
+            for (int i = 0; i < passwordLength; i++)
+            {
+                chars[i] = allowedChars[rd.Next(0, allowedChars.Length)];
+            }
+
+            return new string(chars);
+        }
+
+        public void DeleteEntry()
+        {
+
+            if (MessageBox.Show("Are you sure you want to delete this credentials entry?", "Warning", MessageBoxButtons.OKCancel) == DialogResult.OK)
+            {
+                GetCredentials(_app.CredentialsListBox.SelectedItem.ToString()).Delete(_myUser, PassOneMainScreen.Path);
+            }
         }
     }
 }

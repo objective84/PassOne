@@ -14,7 +14,7 @@ namespace PassOneUnitTests.ServiceTests
 
         public UserSoapImplTests()
         {
-            _userSvc = Factory.GetService(Services.UserSoapSerializer) as ISerializeSvc;
+            _userSvc = Factory.GetService(Services.UserSoapSerializer, Path) as ISerializeSvc;
         }
 
         //Setup and TearDown
@@ -26,8 +26,7 @@ namespace PassOneUnitTests.ServiceTests
         [TestCleanup]
         public void Dispose()
         {
-            //Directory.Delete(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) +
-            //                 "//PassOne", true);
+            Directory.Delete(Path, true);
         }
 
 

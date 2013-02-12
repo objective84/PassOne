@@ -54,9 +54,9 @@ namespace PassOneUnitTests.BusinessTests
         [TestInitialize()]
         public void MyTestInitialize()
         {
-            if (!Directory.Exists(Path))
-                Directory.CreateDirectory(Path);
-            Stream = new FileStream(Path + "users.bin", FileMode.Create, FileAccess.ReadWrite);
+            if (!Directory.Exists(Path + "data"))
+                Directory.CreateDirectory(Path + "data");
+            Stream = new FileStream(Path + "data\\users.bin", FileMode.Create, FileAccess.ReadWrite);
         }
 
         //Use TestCleanup to run code after each test has run
@@ -64,8 +64,7 @@ namespace PassOneUnitTests.BusinessTests
         public void MyTestCleanup()
         {
             Stream.Close();
-            //Directory.Delete(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) +
-            //                 "//PassOne", true);
+            Directory.Delete(Path, true);
         }
 
         #endregion
@@ -84,7 +83,7 @@ namespace PassOneUnitTests.BusinessTests
             var password = TestUser2.Password;
             var expected = TestUser2;
             User actual;
-            actual = UserManager.Authenticate(username, password);
+            actual = UserManager.Authenticate(username, password, Path);
             Assert.AreEqual(expected, actual);
         }
 
@@ -96,9 +95,9 @@ namespace PassOneUnitTests.BusinessTests
         {
             Stream.Close();
             User user = TestUser;
-            UserManager.CreateUser(user);
+            UserManager.CreateUser(user, Path);
 
-            Stream = new FileStream(Path + "users.bin", FileMode.Open, FileAccess.Read);
+            Stream = new FileStream(Path + "data\\users.bin", FileMode.Open, FileAccess.Read);
 
             var table = Soap.Deserialize(Stream) as Hashtable;
             Assert.AreEqual(user, table[user.Id]);
@@ -115,10 +114,10 @@ namespace PassOneUnitTests.BusinessTests
             Stream.Close();
             var user = TestUser;
             user.FirstName = "Arwen";
-            UserManager.UpdateUser(user);
+            UserManager.UpdateUser(user, Path);
             string expected = "Arwen";
 
-            Stream = new FileStream(Path + "users.bin", FileMode.Open, FileAccess.Read);
+            Stream = new FileStream(Path + "data\\users.bin", FileMode.Open, FileAccess.Read);
 
             table = Soap.Deserialize(Stream) as Hashtable;
             string actual = ((User) table[TestUser.Id]).FirstName;
@@ -140,19 +139,18 @@ namespace PassOneUnitTests.BusinessTests
             IList<string> expected = new List<string>() { testCreds1.Website, testCreds2.Website };
 
             user.CredentialsList.Add(testCreds1.Website, testCreds1.Id);
-            user.CredentialsList.Add(testCreds1.Website, testCreds2.Id);
+            user.CredentialsList.Add(testCreds2.Website, testCreds2.Id);
 
             testCreds1.Encrypt(user.Encryption);
             testCreds2.Encrypt(user.Encryption);
-            var credStream = new FileStream(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) +
-                                            "//PassOne//data//" + "data.bin", FileMode.Create, FileAccess.Write);
+            var credStream = new FileStream(Path + "data\\data.bin", FileMode.Create, FileAccess.Write);
             var table = new Hashtable() { { testCreds1.Id, testCreds1 }, { testCreds2.Id, testCreds2 } };
             Soap.Serialize(credStream, table);
             credStream.Close();
 
 
             IList<string> actual;
-            actual = UserManager.GetCredentialsList(user);
+            actual = UserManager.GetCredentialsList(user, Path);
             Assert.AreEqual(expected[0], actual[0]);
 
         }

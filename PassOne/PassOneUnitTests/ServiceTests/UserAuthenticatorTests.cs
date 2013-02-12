@@ -19,10 +19,10 @@ namespace PassOneUnitTests.BusinessTests
 
         public UserAuthenticatorTests()
         {
-            _authenticator = Factory.GetService(Services.UserAuthenticator) as IAuthenticatorSvc;
-            Directory.CreateDirectory(Path);
+            _authenticator = Factory.GetService(Services.UserAuthenticator, Path) as IAuthenticatorSvc;
+            Directory.CreateDirectory(Path + "data");
             var soap = new SoapFormatter();
-            var stream = new FileStream(Path + "users.bin", FileMode.Create, FileAccess.Write);
+            var stream = new FileStream(Path + "\\data\\users.bin", FileMode.Create, FileAccess.Write);
             var table = new Hashtable {{TestUser.Id, TestUser}, {TestUser2.Id, TestUser2}};
             soap.Serialize(stream, table);
             stream.Close();
@@ -37,8 +37,7 @@ namespace PassOneUnitTests.BusinessTests
         [TestCleanup]
         public void Dispose()
         {
-            Directory.Delete(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) +
-                             "//PassOne", true);
+            Directory.Delete(Path, true);
         }
         [TestMethod]
         public void TestAuthenticateFail()
