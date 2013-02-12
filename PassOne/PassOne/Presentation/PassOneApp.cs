@@ -59,13 +59,35 @@ namespace PassOne.Presentation
 
         public string CreateRandomPassword(int passwordLength)
         {
-            string allowedChars = "abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNOPQRSTUVWXYZ0123456789!@$?_-";
+            string allowedCharsLowerCase = "abcdefghijkmnopqrstuvwxyz";
+            string allowedCharsUpperCase = "ABCDEFGHJKLMNOPQRSTUVWXYZ";
+            string allowedNums = "0123456789";
+            string allowedSymbols = "!@$?_-";
             char[] chars = new char[passwordLength];
             Random rd = new Random();
 
             for (int i = 0; i < passwordLength; i++)
             {
-                chars[i] = allowedChars[rd.Next(0, allowedChars.Length)];
+                var selected = string.Empty;
+                switch (rd.Next(1, 6))
+                {
+                    case 1:
+                        selected = allowedCharsLowerCase;
+                        break;
+                    case 2:
+                        selected = allowedCharsUpperCase;
+                        break;
+                    case 3:
+                        selected = allowedNums;
+                        break;
+                    case 4:
+                        selected = allowedSymbols;
+                        break;
+                    case 5:
+                        selected = allowedSymbols;
+                        break;
+                }
+                chars[i] = selected[rd.Next(0, selected.Length)];
             }
 
             return new string(chars);
