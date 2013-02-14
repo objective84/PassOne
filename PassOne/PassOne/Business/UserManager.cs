@@ -7,40 +7,43 @@ using PassOne.Domain;
 
 namespace PassOne.Business
 {
-    public static class UserManager
+    public class UserManager : ManagerBase
     {
-
-        public static void CreateUser(string path, string fn, string ln, string un, string pass)
+        public UserManager()
+            : base(Services.UserSoapSerializer)
         {
-            GetUserService(path).UpdateTable(new User(GetUserService(path).GetNextIdValue(), fn, ln, un, pass));
         }
 
-        public static void CreateUser(User user, string path )
+        public void CreateUser(string path, string fn, string ln, string un, string pass)
         {
-            GetUserService(path).UpdateTable(user);
+            GetService(path).UpdateTable(new User(GetService(path).GetNextIdValue(), fn, ln, un, pass));
         }
 
-        public static void UpdateUser(this User user, string path)
+        public void CreateUser(User user, string path )
         {
-            GetUserService(path).UpdateTable(user);
+            GetService(path).UpdateTable(user);
         }
 
-        public static User Authenticate(string username, string password, string path)
+        public void UpdateUser(User user, string path)
         {
-            var factory = new SoapFactory();
-            var authenticator = factory.GetService(Services.UserAuthenticator, path) as IAuthenticatorSvc;
+            GetService(path).UpdateTable(user);
+        }
+
+        public User Authenticate(string username, string password, string path)
+        {
+            var authenticator = GetService(Services.UserAuthenticator, path) as IAuthenticatorSvc;
             return authenticator.Authenticate(username, password);
         }
 
-        public static IList<string> GetCredentialsList(this User user, string path)
+        public Dictionary<string, int> GetCredentialsList(User user, string path)
         {
-            return (from string id in user.CredentialsList.Keys select user.FindCredentials((int) user.CredentialsList[id], path).Website).ToList();
-        }
-
-        private static ISerializeSvc GetUserService(string path)
-        {
-            var factory = new SoapFactory();
-            return factory.GetService(Services.UserSoapSerializer, path) as ISerializeSvc;
+            Dictionary<string, int> dictionary = new Dictionary<string, int>();
+            foreach (string key in user.CredentialsList.Keys)
+            {
+                Credentials credentials = ((CredentialsSoapSerializer) Factory.GetService(Services.CredentialsSoapSerializer, path, user)).RetreiveById((int)user.CredentialsList[key]) as Credentials;
+                dictionary.Add(credentials.Website, credentials.Id);
+            }
+            return dictionary;
         }
     }
 }

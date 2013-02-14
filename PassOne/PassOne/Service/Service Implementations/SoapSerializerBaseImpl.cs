@@ -24,6 +24,7 @@ namespace PassOne.Service
         {
             DirectoryPath = path;
         }
+
         protected Hashtable RetrieveTable()
         {
             var soap = new SoapFormatter();

@@ -5,16 +5,9 @@ using PassOne.Domain;
 
 namespace PassOne.Service
 {
-    public enum Services
+    public class SoapFactory : Factory
     {
-        CredentialsSoapSerializer,
-        UserSoapSerializer,
-        UserAuthenticator
-    }
-
-    public class SoapFactory
-    {
-        public IService GetService(Services serviceName, string path,  User user = null)
+        public override IService GetService(Services serviceName, string path,  User user = null)
         {
             Type type;
             var obj = new object();
@@ -32,15 +25,8 @@ namespace PassOne.Service
                 Console.WriteLine("Exception occured: {0}", e);
                 throw e;
             }
-            ((IService)obj).SetPath(path);
+            ((ISerializeSvc)obj).SetPath(path);
             return (IService) obj;
-        }
-
-        private string GetImplName(string servicename)
-        {
-            var settings =
-            ConfigurationManager.AppSettings;
-            return settings.Get(servicename);
         }
     }
 }

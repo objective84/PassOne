@@ -1,4 +1,6 @@
-﻿namespace PassOne
+﻿using System.Windows.Forms;
+
+namespace PassOne
 {
     partial class PassOneMainScreen
     {
@@ -30,10 +32,10 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PassOneMainScreen));
             this.SplitScreenPanels = new System.Windows.Forms.SplitContainer();
-            this.CredentialsList = new System.Windows.Forms.ListBox();
+            this.credentialsListBox = new System.Windows.Forms.ListBox();
             this.generateButton = new System.Windows.Forms.Button();
             this.copyPasswordBtn = new System.Windows.Forms.Button();
-            this.SaveBtn = new System.Windows.Forms.Button();
+            this.saveBtn = new System.Windows.Forms.Button();
             this.showPasswordBtn = new System.Windows.Forms.Button();
             this.emailLabel = new System.Windows.Forms.Label();
             this.passwordLabel = new System.Windows.Forms.Label();
@@ -96,13 +98,13 @@
             // 
             // SplitScreenPanels.Panel1
             // 
-            this.SplitScreenPanels.Panel1.Controls.Add(this.CredentialsList);
+            this.SplitScreenPanels.Panel1.Controls.Add(this.credentialsListBox);
             // 
             // SplitScreenPanels.Panel2
             // 
             this.SplitScreenPanels.Panel2.Controls.Add(this.generateButton);
             this.SplitScreenPanels.Panel2.Controls.Add(this.copyPasswordBtn);
-            this.SplitScreenPanels.Panel2.Controls.Add(this.SaveBtn);
+            this.SplitScreenPanels.Panel2.Controls.Add(this.saveBtn);
             this.SplitScreenPanels.Panel2.Controls.Add(this.showPasswordBtn);
             this.SplitScreenPanels.Panel2.Controls.Add(this.emailLabel);
             this.SplitScreenPanels.Panel2.Controls.Add(this.passwordLabel);
@@ -118,15 +120,14 @@
             this.SplitScreenPanels.SplitterDistance = 124;
             this.SplitScreenPanels.TabIndex = 0;
             // 
-            // CredentialsList
+            // credentialsListBox
             // 
-            this.CredentialsList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.CredentialsList.FormattingEnabled = true;
-            this.CredentialsList.Location = new System.Drawing.Point(0, 0);
-            this.CredentialsList.Name = "CredentialsList";
-            this.CredentialsList.Size = new System.Drawing.Size(124, 282);
-            this.CredentialsList.TabIndex = 0;
-            this.CredentialsList.SelectedIndexChanged += new System.EventHandler(this.CredentialsList_SelectedIndexChanged);
+            this.credentialsListBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.credentialsListBox.FormattingEnabled = true;
+            this.credentialsListBox.Location = new System.Drawing.Point(0, 0);
+            this.credentialsListBox.Name = "credentialsListBox";
+            this.credentialsListBox.Size = new System.Drawing.Size(124, 282);
+            this.credentialsListBox.TabIndex = 0;
             // 
             // generateButton
             // 
@@ -136,7 +137,6 @@
             this.generateButton.TabIndex = 13;
             this.generateButton.Text = "Generate Password";
             this.generateButton.UseVisualStyleBackColor = true;
-            this.generateButton.Click += new System.EventHandler(this.generateButton_Click);
             // 
             // copyPasswordBtn
             // 
@@ -146,17 +146,15 @@
             this.copyPasswordBtn.TabIndex = 12;
             this.copyPasswordBtn.Text = "Copy Password";
             this.copyPasswordBtn.UseVisualStyleBackColor = true;
-            this.copyPasswordBtn.Click += new System.EventHandler(this.copyPasswordBtn_Click);
             // 
-            // SaveBtn
+            // saveBtn
             // 
-            this.SaveBtn.Location = new System.Drawing.Point(283, 251);
-            this.SaveBtn.Name = "SaveBtn";
-            this.SaveBtn.Size = new System.Drawing.Size(75, 23);
-            this.SaveBtn.TabIndex = 5;
-            this.SaveBtn.Text = "Save";
-            this.SaveBtn.UseVisualStyleBackColor = true;
-            this.SaveBtn.Click += new System.EventHandler(this.SaveBtn_Click);
+            this.saveBtn.Location = new System.Drawing.Point(283, 251);
+            this.saveBtn.Name = "saveBtn";
+            this.saveBtn.Size = new System.Drawing.Size(75, 23);
+            this.saveBtn.TabIndex = 5;
+            this.saveBtn.Text = "Save";
+            this.saveBtn.UseVisualStyleBackColor = true;
             // 
             // showPasswordBtn
             // 
@@ -166,7 +164,6 @@
             this.showPasswordBtn.TabIndex = 10;
             this.showPasswordBtn.Text = "Show Password";
             this.showPasswordBtn.UseVisualStyleBackColor = true;
-            this.showPasswordBtn.Click += new System.EventHandler(this.showPasswordBtn_Click);
             // 
             // emailLabel
             // 
@@ -293,7 +290,6 @@
             this.newToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
             this.newToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
             this.newToolStripMenuItem.Text = "&New Credentials";
-            this.newToolStripMenuItem.Click += new System.EventHandler(this.newEntry_Click);
             // 
             // toolStripSeparator2
             // 
@@ -308,14 +304,12 @@
             this.saveToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
             this.saveToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
             this.saveToolStripMenuItem.Text = "&Save Credentials";
-            this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
             // 
             // deleteCredentialsToolStripMenuItem
             // 
             this.deleteCredentialsToolStripMenuItem.Name = "deleteCredentialsToolStripMenuItem";
             this.deleteCredentialsToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
             this.deleteCredentialsToolStripMenuItem.Text = "Delete Credentials";
-            this.deleteCredentialsToolStripMenuItem.Click += new System.EventHandler(this.deleteCredentialsToolStripMenuItem_Click);
             // 
             // toolStripSeparator3
             // 
@@ -422,7 +416,7 @@
             // customizeToolStripMenuItem
             // 
             this.customizeToolStripMenuItem.Name = "customizeToolStripMenuItem";
-            this.customizeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.customizeToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
             this.customizeToolStripMenuItem.Text = "Settings";
             // 
             // helpToolStripMenuItem
@@ -470,7 +464,6 @@
             this.newToolStripButton.Name = "newToolStripButton";
             this.newToolStripButton.Size = new System.Drawing.Size(23, 22);
             this.newToolStripButton.Text = "&New";
-            this.newToolStripButton.Click += new System.EventHandler(this.newEntry_Click);
             // 
             // saveToolStripButton
             // 
@@ -480,7 +473,6 @@
             this.saveToolStripButton.Name = "saveToolStripButton";
             this.saveToolStripButton.Size = new System.Drawing.Size(23, 22);
             this.saveToolStripButton.Text = "&Save";
-            this.saveToolStripButton.Click += new System.EventHandler(this.SaveBtn_Click);
             // 
             // toolStripSeparator
             // 
@@ -530,8 +522,6 @@
             // 
             // PassOneMainScreen
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(496, 333);
             this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.panel1);
@@ -540,7 +530,6 @@
             this.Name = "PassOneMainScreen";
             this.Text = "PassOne";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.PassOneMainScreen_FormClosed);
-            this.Load += new System.EventHandler(this.PassOne_Load);
             this.SplitScreenPanels.Panel1.ResumeLayout(false);
             this.SplitScreenPanels.Panel2.ResumeLayout(false);
             this.SplitScreenPanels.Panel2.PerformLayout();
@@ -558,56 +547,119 @@
 
         #endregion
 
-        private System.Windows.Forms.SplitContainer SplitScreenPanels;
-        private System.Windows.Forms.ListBox CredentialsList;
-        private System.Windows.Forms.Label websiteLabel;
-        private System.Windows.Forms.TextBox emailTextBox;
-        private System.Windows.Forms.TextBox passwordTextBox;
-        private System.Windows.Forms.TextBox usernameTextBox;
-        private System.Windows.Forms.TextBox urlTextBox;
-        private System.Windows.Forms.TextBox websiteTextBox;
-        private System.Windows.Forms.Button showPasswordBtn;
-        private System.Windows.Forms.Label emailLabel;
-        private System.Windows.Forms.Label passwordLabel;
-        private System.Windows.Forms.Label usernameLabel;
-        private System.Windows.Forms.Label urlLabel;
-        private System.Windows.Forms.Button SaveBtn;
-        private System.Windows.Forms.Button copyPasswordBtn;
-        private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Button generateButton;
-        private System.Windows.Forms.MenuStrip menuStrip2;
-        private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem1;
-        private System.Windows.Forms.ToolStripMenuItem newToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
-        private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem deleteCredentialsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
-        private System.Windows.Forms.ToolStripMenuItem logOutToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
-        private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem editToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem undoToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem redoToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
-        private System.Windows.Forms.ToolStripMenuItem cutToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem copyToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem pasteToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
-        private System.Windows.Forms.ToolStripMenuItem selectAllToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem toolsToolStripMenuItem1;
-        private System.Windows.Forms.ToolStripMenuItem customizeToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator7;
-        private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
-        private System.Windows.Forms.ToolStrip toolStrip1;
-        private System.Windows.Forms.ToolStripButton newToolStripButton;
-        private System.Windows.Forms.ToolStripButton saveToolStripButton;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator;
-        private System.Windows.Forms.ToolStripButton cutToolStripButton;
-        private System.Windows.Forms.ToolStripButton copyToolStripButton;
-        private System.Windows.Forms.ToolStripButton pasteToolStripButton;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
-        private System.Windows.Forms.ToolStripButton helpToolStripButton;
+
+
+
+        private ListBox credentialsListBox;
+        private TextBox emailTextBox;
+        private TextBox passwordTextBox;
+        private TextBox usernameTextBox;
+        private TextBox urlTextBox;
+        private TextBox websiteTextBox;
+        private Button showPasswordBtn;
+        private Button saveBtn;
+        private Button copyPasswordBtn;
+        private Button generateButton;
+        private SplitContainer SplitScreenPanels;
+        private Label websiteLabel;
+        private Label emailLabel;
+        private Label passwordLabel;
+        private Label usernameLabel;
+        private Label urlLabel;
+        private Panel panel1;
+        private MenuStrip menuStrip2;
+        private ToolStripMenuItem fileToolStripMenuItem1;
+        private ToolStripMenuItem newToolStripMenuItem;
+        private ToolStripSeparator toolStripSeparator2;
+        private ToolStripMenuItem saveToolStripMenuItem;
+        private ToolStripMenuItem deleteCredentialsToolStripMenuItem;
+        private ToolStripSeparator toolStripSeparator3;
+        private ToolStripMenuItem logOutToolStripMenuItem;
+        private ToolStripSeparator toolStripSeparator4;
+        private ToolStripMenuItem exitToolStripMenuItem;
+        private ToolStripMenuItem editToolStripMenuItem;
+        private ToolStripMenuItem undoToolStripMenuItem;
+        private ToolStripMenuItem redoToolStripMenuItem;
+        private ToolStripSeparator toolStripSeparator5;
+        private ToolStripMenuItem cutToolStripMenuItem;
+        private ToolStripMenuItem copyToolStripMenuItem;
+        private ToolStripMenuItem pasteToolStripMenuItem;
+        private ToolStripSeparator toolStripSeparator6;
+        private ToolStripMenuItem selectAllToolStripMenuItem;
+        private ToolStripMenuItem toolsToolStripMenuItem1;
+        private ToolStripMenuItem customizeToolStripMenuItem;
+        private ToolStripMenuItem helpToolStripMenuItem;
+        private ToolStripSeparator toolStripSeparator7;
+        private ToolStripMenuItem aboutToolStripMenuItem;
+        private ToolStrip toolStrip1;
+        private ToolStripButton newToolStripButton;
+        private ToolStripButton saveToolStripButton;
+        private ToolStripSeparator toolStripSeparator;
+        private ToolStripButton cutToolStripButton;
+        private ToolStripButton copyToolStripButton;
+        private ToolStripButton pasteToolStripButton;
+        private ToolStripSeparator toolStripSeparator1;
+        private ToolStripButton helpToolStripButton;
+        
+        public ListBox CredentialsListBox
+        {
+            get { return credentialsListBox; }
+            private set { credentialsListBox = value; }
+        }
+
+        public TextBox EmailTextBox
+        {
+            get { return emailTextBox; }
+            set { emailTextBox = value; }
+        }
+
+        public TextBox PasswordTextBox
+        {
+            get { return passwordTextBox; }
+            set { passwordTextBox = value; }
+        }
+
+        public TextBox UsernameTextBox
+        {
+            get { return usernameTextBox; }
+            set { usernameTextBox = value; }
+        }
+
+        public TextBox UrlTextBox
+        {
+            get { return urlTextBox; }
+            set { urlTextBox = value; }
+        }
+
+        public TextBox WebsiteTextBox
+        {
+            get { return websiteTextBox; }
+            set { websiteTextBox = value; }
+        }
+
+        public Button ShowPasswordBtn
+        {
+            get { return showPasswordBtn; }
+            set { showPasswordBtn = value; }
+        }
+
+        public Button SaveBtn
+        {
+            get { return saveBtn; }
+            set { saveBtn = value; }
+        }
+
+        public Button CopyPasswordBtn
+        {
+            get { return copyPasswordBtn; }
+            set { copyPasswordBtn = value; }
+        }
+
+        public Button GenerateButton
+        {
+            get { return generateButton; }
+            set { generateButton = value; }
+        }
     }
 }
 

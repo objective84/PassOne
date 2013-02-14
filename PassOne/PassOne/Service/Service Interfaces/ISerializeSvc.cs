@@ -16,5 +16,6 @@ namespace PassOne.Service
        void DeleteValue(object obj);
        int GetNextIdValue();
        void UpdateTable(object obj);
+       void SetPath(string path);
    }
 }

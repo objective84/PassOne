@@ -21,7 +21,8 @@ namespace PassOneUnitTests.BusinessTests
     {
         public SoapFormatter Soap = new SoapFormatter();
         public FileStream Stream;
-        private TestContext testContextInstance;
+        private TestContext _testContextInstance;
+        private UserManager _manager = new UserManager();
 
         /// <summary>
         ///Gets or sets the test context which provides
@@ -29,8 +30,8 @@ namespace PassOneUnitTests.BusinessTests
         ///</summary>
         public TestContext TestContext
         {
-            get { return testContextInstance; }
-            set { testContextInstance = value; }
+            get { return _testContextInstance; }
+            set { _testContextInstance = value; }
         }
 
         #region Additional test attributes
@@ -54,6 +55,7 @@ namespace PassOneUnitTests.BusinessTests
         [TestInitialize()]
         public void MyTestInitialize()
         {
+            _manager = new UserManager();
             if (!Directory.Exists(Path + "data"))
                 Directory.CreateDirectory(Path + "data");
             Stream = new FileStream(Path + "data\\users.bin", FileMode.Create, FileAccess.ReadWrite);
@@ -83,7 +85,7 @@ namespace PassOneUnitTests.BusinessTests
             var password = TestUser2.Password;
             var expected = TestUser2;
             User actual;
-            actual = UserManager.Authenticate(username, password, Path);
+            actual = _manager.Authenticate(username, password, Path);
             Assert.AreEqual(expected, actual);
         }
 
@@ -95,7 +97,7 @@ namespace PassOneUnitTests.BusinessTests
         {
             Stream.Close();
             User user = TestUser;
-            UserManager.CreateUser(user, Path);
+            _manager.CreateUser(user, Path);
 
             Stream = new FileStream(Path + "data\\users.bin", FileMode.Open, FileAccess.Read);
 
@@ -114,7 +116,7 @@ namespace PassOneUnitTests.BusinessTests
             Stream.Close();
             var user = TestUser;
             user.FirstName = "Arwen";
-            UserManager.UpdateUser(user, Path);
+            _manager.UpdateUser(user, Path);
             string expected = "Arwen";
 
             Stream = new FileStream(Path + "data\\users.bin", FileMode.Open, FileAccess.Read);
@@ -136,7 +138,9 @@ namespace PassOneUnitTests.BusinessTests
             testCreds1 = TestCredentials.Copy();
             testCreds2 = TestCredentials2.Copy();
 
-            IList<string> expected = new List<string>() { testCreds1.Website, testCreds2.Website };
+            IDictionary<string, int> expected = new Dictionary<string, int>();
+            expected.Add(testCreds1.Website, testCreds1.Id);
+            expected.Add(testCreds2.Website, testCreds2.Id);
 
             user.CredentialsList.Add(testCreds1.Website, testCreds1.Id);
             user.CredentialsList.Add(testCreds2.Website, testCreds2.Id);
@@ -149,9 +153,9 @@ namespace PassOneUnitTests.BusinessTests
             credStream.Close();
 
 
-            IList<string> actual;
-            actual = UserManager.GetCredentialsList(user, Path);
-            Assert.AreEqual(expected[0], actual[0]);
+            Dictionary<string, int> actual;
+            actual = _manager.GetCredentialsList(user, Path);
+            Assert.AreEqual(expected.Values, actual.Values);
 
         }
     }

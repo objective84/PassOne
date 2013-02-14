@@ -8,25 +8,30 @@ using PassOne.Domain;
 
 namespace PassOne.Business
 {
-    public static class CredentialsManager
+    public class CredentialsManager : ManagerBase
     {
-        public static string Path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\PassOne\\";
+        public string Path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\PassOne\\";
 
-        public static void Create(this User user, Credentials creds, string path)
+        public CredentialsManager()
+            : base(Services.CredentialsSoapSerializer)
         {
-            var credsSvc = GetCredentialsSvc(user, path);
+        }
+
+        public void CreateCredentials(User user, Credentials creds, string path)
+        {
+            var credsSvc = GetService(Services.CredentialsSoapSerializer, path, user) as ISerializeSvc;
             creds.Id = credsSvc.GetNextIdValue();
             if (!user.CredentialsList.ContainsKey(creds.Website))
                 user.CredentialsList.Add(creds.Website, creds.Id);
             credsSvc.UpdateTable(creds);
-            user.UpdateUser(path);
+            (GetService(Services.UserSoapSerializer, path) as UserSoapSerializer).UpdateTable(user);
         }
 
-        public static void Update(this Credentials creds, User user, string path)
+        public void UpdateCredentials(User user, Credentials creds, string path)
         {
             try
             {
-                GetCredentialsSvc(user, path).UpdateTable(creds);
+                GetService(path, user).UpdateTable(creds);
             }
             catch (CryptographicException)
             {
@@ -34,36 +39,32 @@ namespace PassOne.Business
             }
         }
 
-        public static Credentials FindCredentials(this User user, int id, string path)
+        public Credentials FindCredentials(User user, int id, string path)
         {
             try
             {
-                var creds = GetCredentialsSvc(user, path).RetreiveById(id) as Credentials;
+                var creds =
+                    ((CredentialsSoapSerializer) GetService(Services.CredentialsSoapSerializer, path, user))
+                        .RetreiveById(id) as Credentials;
                 return creds;
             }
             catch (CryptographicException)
             {
-               throw new EncryptionException();
+                throw new EncryptionException();
             }
         }
 
-        public static void Delete(this Credentials creds, User user, string path)
+        public void DeleteCredentials(Credentials creds, User user, string path)
         {
             try
             {
-                GetCredentialsSvc(user, path).DeleteValue(creds);
+                GetService(path, user).DeleteValue(creds);
                 user.CredentialsList.Remove(creds.Id);
             }
             catch (CryptographicException)
             {
                 throw new EncryptionException();
             }
-        }
-
-        private static ISerializeSvc GetCredentialsSvc(User user, string path)
-        {
-            var factory = new SoapFactory();
-            return factory.GetService(Services.CredentialsSoapSerializer, path, user) as ISerializeSvc;
         }
     }
 }
