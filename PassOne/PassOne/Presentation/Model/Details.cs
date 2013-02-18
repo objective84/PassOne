@@ -64,6 +64,9 @@ namespace PassOne.Presentation
             }
         }
 
+        /// <summary>
+        /// Method to clear all details properties
+        /// </summary>
         public void Clear()
         {
             Title = string.Empty;

@@ -28,7 +28,7 @@ namespace PassOne
             _controller = new PassOneController();
 
             _model.View = _view;
-            _view.PassOneController = _controller;
+            _view.Controller = _controller;
             _controller.Model = _model;
             _controller.ModelState = ModelStates.Login;
             _view.ConnectEventHandlers(_controller);

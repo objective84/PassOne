@@ -42,6 +42,11 @@ namespace PassOne.Service
             }
         }
 
+        /// <summary>
+        /// Method to retrieve a specific user by their username
+        /// </summary>
+        /// <param name="username">The username of the requested User</param>
+        /// <returns>The requested user if found; if not returns null</returns>
         public User RetrieveByUsername(string username)
         {
             var users = RetrieveTable();

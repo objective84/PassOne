@@ -12,6 +12,12 @@ namespace PassOne.Service
        {
        }
 
+       /// <summary>
+       /// Method to authenticate a user's login information
+       /// </summary>
+       /// <param name="username">The username the user typed into the login form</param>
+       /// <param name="password">The password the user typed into the login form</param>
+       /// <returns>If the authentication was successful, the user retrieved using the username; else returns throws an InvalidLoginException</returns>
        public User Authenticate(string username, string password)
        {
            var user = RetrieveByUsername(username);

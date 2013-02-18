@@ -18,6 +18,7 @@ namespace PassOne.Service
 
     public abstract class Factory
     {
+
         public abstract IService GetService(Services serviceName, string path, User user = null);
 
         protected string GetImplName(string servicename)

@@ -155,7 +155,7 @@ namespace PassOneUnitTests.BusinessTests
 
             Dictionary<string, int> actual;
             actual = _manager.GetCredentialsList(user, Path);
-            Assert.AreEqual(expected.Values, actual.Values);
+            Assert.AreEqual(expected[TestCredentials.Website], actual[TestCredentials.Website]);
 
         }
     }

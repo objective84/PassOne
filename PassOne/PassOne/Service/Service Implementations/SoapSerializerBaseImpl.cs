@@ -25,6 +25,10 @@ namespace PassOne.Service
             DirectoryPath = path;
         }
 
+        /// <summary>
+        /// Method to retreive the Hashtable from the file specified by the implementation class
+        /// </summary>
+        /// <returns>Hashtable</returns>
         protected Hashtable RetrieveTable()
         {
             var soap = new SoapFormatter();
@@ -56,16 +60,29 @@ namespace PassOne.Service
             return table;
         }
 
+        /// <summary>
+        /// Returns an int representing the next available Id #
+        /// </summary>
+        /// <returns>Integer</returns>
         public int GetNextIdValue()
         {
             return (RetrieveTable().Count + 1);
         }
 
+        /// <summary>
+        /// Method to retrieve an item from the file specified by the implementation method by its Id #
+        /// </summary>
+        /// <param name="id">The item's Id</param>
+        /// <returns>The requested item, if found; if not returns null</returns>
         public virtual object RetreiveById(int id)
         {
             return RetrieveTable()[id];
         }
 
+        /// <summary>
+        /// Deletes the value from the hashtable contained in the file specified by the implementation
+        /// </summary>
+        /// <param name="obj">The User or Credentials object to be deleted</param>
         public virtual void DeleteValue(object obj)
         {
             var temp = new Hashtable();
@@ -84,6 +101,10 @@ namespace PassOne.Service
             Store(values);
         }
 
+        /// <summary>
+        /// Method to store the table back in the .bin file specified by the implementation
+        /// </summary>
+        /// <param name="table"></param>
         public void Store(Hashtable table)
         {
             var soap = new SoapFormatter();
