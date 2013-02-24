@@ -29,7 +29,7 @@ namespace PassOne.Service
         /// Method to retreive the Hashtable from the file specified by the implementation class
         /// </summary>
         /// <returns>Hashtable</returns>
-        protected Hashtable RetrieveTable()
+        protected virtual Hashtable RetrieveTable()
         {
             var soap = new SoapFormatter();
             try
@@ -66,7 +66,8 @@ namespace PassOne.Service
         /// <returns>Integer</returns>
         public int GetNextIdValue()
         {
-            return (RetrieveTable().Count + 1);
+            var table = RetrieveTable();
+            return ((from object value in table.Keys select Convert.ToInt32(value)).Concat(new[] {0}).Max())+1;
         }
 
         /// <summary>

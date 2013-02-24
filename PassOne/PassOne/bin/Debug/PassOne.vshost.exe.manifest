@@ -42,14 +42,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="PassOne.exe" size="68096">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="PassOne.exe" size="60416">
       <assemblyIdentity name="PassOne" version="1.0.0.0" language="neutral" processorArchitecture="x86" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-        <dsig:DigestValue>bYz4Am3lXZ/wVejQ/WswmLCmv14=</dsig:DigestValue>
+        <dsig:DigestValue>NcJ5XVpCer9MOPKl7t1ScEqMhVM=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>

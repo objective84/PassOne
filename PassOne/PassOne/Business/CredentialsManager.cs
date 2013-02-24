@@ -18,7 +18,7 @@ namespace PassOne.Business
         {
         }
 
-        public void CreateCredentials(User user, Credentials creds, string path)
+        public int CreateCredentials(User user, Credentials creds, string path)
         {
             var credsSvc = GetService(Services.CredentialsSoapSerializer, path, user) as ISerializeSvc;
             creds.Id = credsSvc.GetNextIdValue();
@@ -26,6 +26,7 @@ namespace PassOne.Business
                 user.CredentialsList.Add(creds.Website, creds.Id);
             credsSvc.UpdateTable(creds);
             (GetService(Services.UserSoapSerializer, path) as UserSoapSerializer).UpdateTable(user);
+            return creds.Id;
         }
 
         /// <summary>
@@ -77,6 +78,7 @@ namespace PassOne.Business
         {
             try
             {
+                creds.Encrypt(user.Encryption);
                 GetService(path, user).DeleteValue(creds);
                 user.CredentialsList.Remove(creds.Id);
             }
@@ -85,5 +87,6 @@ namespace PassOne.Business
                 throw new EncryptionException();
             }
         }
+
     }
 }

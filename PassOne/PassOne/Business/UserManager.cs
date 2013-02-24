@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using PassOne.Domain.Exceptions;
 using PassOne.Service;
 using PassOne.Domain;
 
@@ -68,10 +70,36 @@ namespace PassOne.Business
         public Dictionary<string, int> GetCredentialsList(User user, string path)
         {
             Dictionary<string, int> dictionary = new Dictionary<string, int>();
-            foreach (string key in user.CredentialsList.Keys)
+            var temp = new Hashtable();
+            foreach (var key in user.CredentialsList.Keys)
+                temp.Add(key, user.CredentialsList[key]);
+
+            foreach (string key in temp.Keys)
             {
-                Credentials credentials = ((CredentialsSoapSerializer) Factory.GetService(Services.CredentialsSoapSerializer, path, user)).RetreiveById((int)user.CredentialsList[key]) as Credentials;
-                dictionary.Add(credentials.Website, credentials.Id);
+                try
+                {
+                    Credentials credentials =
+                        ((CredentialsSoapSerializer) Factory.GetService(Services.CredentialsSoapSerializer, path, user))
+                            .RetreiveById((int) user.CredentialsList[key]) as Credentials;
+                    dictionary.Add(credentials.Website, credentials.Id);
+                }
+                catch (CredentialsNotFoundException e)
+                {
+                    foreach (var key1 in user.CredentialsList.Keys)
+                    {
+                        if (user.CredentialsList[key1].Equals(e.IdNotFound))
+                        {
+                            user.CredentialsList.Remove(key1);
+                            break;
+                        }
+
+                    }
+                    UpdateUser(user, path);
+                }
+                catch (ArgumentException e)
+                {
+                    
+                }
             }
             return dictionary;
         }

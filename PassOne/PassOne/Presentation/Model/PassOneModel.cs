@@ -178,7 +178,7 @@ namespace PassOne.Presentation
        /// Method to add a new entry to the view's credentials listbox
        /// </summary>
        /// <param name="item">The credentials title to be added</param>
-       private void AddItemToCredentialsListBox(string item)
+       public void AddItemToCredentialsListBox(string item)
        {
            View.MainForm.CredentialsListBox.Items.Add(item);
        }
@@ -187,7 +187,7 @@ namespace PassOne.Presentation
        /// Method to remove a credentials entry from the view's list box
        /// </summary>
        /// <param name="item">The credentials title to be removed</param>
-       private void RemoveItemFromCredentialsListBox(string item)
+       public void RemoveItemFromCredentialsListBox(string item)
        {
            View.MainForm.CredentialsListBox.Items.Remove(item);
        }

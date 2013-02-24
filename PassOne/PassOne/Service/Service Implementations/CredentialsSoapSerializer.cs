@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Soap;
 using PassOne.Domain;
+using PassOne.Domain.Exceptions;
 
 namespace PassOne.Service
 {
@@ -29,9 +30,17 @@ namespace PassOne.Service
 
         public override object RetreiveById(int id)
         {
-            var value = RetrieveTable()[id] as Credentials;
-            value.Decrypt(_myUser.Encryption);
-            return value;
+            try
+            {
+                var value = RetrieveTable()[id] as Credentials;
+                value.Decrypt(_myUser.Encryption);
+                return value;
+            }
+            catch (NullReferenceException e)
+            {
+                throw new CredentialsNotFoundException(id);
+            }
+            
         }
 
         /// <summary>

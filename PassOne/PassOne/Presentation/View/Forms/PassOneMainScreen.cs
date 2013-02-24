@@ -39,5 +39,15 @@ namespace PassOne
             deleteCredentialsToolStripMenuItem.Click += controller.deleteCredentials_Click;
             logOutToolStripMenuItem.Click += controller.logoutBtn_Click;
         }
+
+        private void cutToolStripButton_Click(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void customizeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
