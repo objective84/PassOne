@@ -1,0 +1,157 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="2.0" xmlns:edmx="http://schemas.microsoft.com/ado/2008/10/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="PassOne.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
+        <EntityContainer Name="PassOneStoreContainer">
+          <EntitySet Name="Credentials" EntityType="PassOne.Store.Credentials" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="User" EntityType="PassOne.Store.User" store:Type="Tables" Schema="dbo" />
+          <AssociationSet Name="FK_Credentials_User" Association="PassOne.Store.FK_Credentials_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="Credentials" EntitySet="Credentials" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Credentials">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="Website" Type="varbinary" Nullable="false" MaxLength="50" />
+          <Property Name="Url" Type="varbinary" Nullable="false" MaxLength="50" />
+          <Property Name="Username" Type="varbinary" Nullable="false" MaxLength="50" />
+          <Property Name="Email" Type="varbinary" Nullable="false" MaxLength="50" />
+          <Property Name="Password" Type="varbinary" Nullable="false" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="FirstName" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="LastName" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="Username" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="Password" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="k" Type="varbinary" Nullable="false" MaxLength="50" />
+          <Property Name="v" Type="varbinary" Nullable="false" MaxLength="50" />
+        </EntityType>
+        <Association Name="FK_Credentials_User">
+          <End Role="User" Type="PassOne.Store.User" Multiplicity="1" />
+          <End Role="Credentials" Type="PassOne.Store.Credentials" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Credentials">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="PassOne" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+        <EntityContainer Name="PassOneContext" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Credentials" EntityType="PassOne.Credential" />
+          <EntitySet Name="Users" EntityType="PassOne.User" />
+          <AssociationSet Name="FK_Credentials_User" Association="PassOne.FK_Credentials_User">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Credentials" EntitySet="Credentials" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Credential">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <Property Name="Website" Type="Binary" Nullable="false" MaxLength="50" FixedLength="false" />
+          <Property Name="Url" Type="Binary" Nullable="false" MaxLength="50" FixedLength="false" />
+          <Property Name="Username" Type="Binary" Nullable="false" MaxLength="50" FixedLength="false" />
+          <Property Name="Email" Type="Binary" Nullable="false" MaxLength="50" FixedLength="false" />
+          <Property Name="Password" Type="Binary" Nullable="false" MaxLength="50" FixedLength="false" />
+          <NavigationProperty Name="User" Relationship="PassOne.FK_Credentials_User" FromRole="Credentials" ToRole="User" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="FirstName" Type="String" Nullable="false" MaxLength="50" Unicode="false" FixedLength="false" />
+          <Property Name="LastName" Type="String" Nullable="false" MaxLength="50" Unicode="false" FixedLength="false" />
+          <Property Name="Username" Type="String" Nullable="false" MaxLength="50" Unicode="false" FixedLength="false" />
+          <Property Name="Password" Type="String" Nullable="false" MaxLength="50" Unicode="false" FixedLength="false" />
+          <Property Name="k" Type="Binary" Nullable="false" MaxLength="50" FixedLength="false" />
+          <Property Name="v" Type="Binary" Nullable="false" MaxLength="50" FixedLength="false" />
+          <NavigationProperty Name="Credentials" Relationship="PassOne.FK_Credentials_User" FromRole="User" ToRole="Credentials" />
+        </EntityType>
+        <Association Name="FK_Credentials_User">
+          <End Role="User" Type="PassOne.User" Multiplicity="1" />
+          <End Role="Credentials" Type="PassOne.Credential" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Credentials">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2008/09/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="PassOneStoreContainer" CdmEntityContainer="PassOneContext">
+          <EntitySetMapping Name="Credentials">
+            <EntityTypeMapping TypeName="PassOne.Credential">
+              <MappingFragment StoreEntitySet="Credentials">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="Website" ColumnName="Website" />
+                <ScalarProperty Name="Url" ColumnName="Url" />
+                <ScalarProperty Name="Username" ColumnName="Username" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Users">
+            <EntityTypeMapping TypeName="PassOne.User">
+              <MappingFragment StoreEntitySet="User">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="Username" ColumnName="Username" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="k" ColumnName="k" />
+                <ScalarProperty Name="v" ColumnName="v" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2008/10/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="True" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

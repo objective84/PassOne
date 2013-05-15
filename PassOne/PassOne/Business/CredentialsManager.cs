@@ -10,22 +10,16 @@ namespace PassOne.Business
 {
     public class CredentialsManager : ManagerBase
     {
-        public string Path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\PassOne\\";
-
         //Constructors
         public CredentialsManager()
-            : base(Services.CredentialsSoapSerializer)
+            : base(Services.CredentialsData)
         {
         }
 
-        public int CreateCredentials(User user, Credentials creds, string path)
+        public int CreateCredentials(PassOneCredentials creds)
         {
-            var credsSvc = GetService(Services.CredentialsSoapSerializer, path, user) as ISerializeSvc;
-            creds.Id = credsSvc.GetNextIdValue();
-            if (!user.CredentialsList.ContainsKey(creds.Website))
-                user.CredentialsList.Add(creds.Website, creds.Id);
-            credsSvc.UpdateTable(creds);
-            (GetService(Services.UserSoapSerializer, path) as UserSoapSerializer).UpdateTable(user);
+            var credsSvc = GetService(Services.CredentialsData) as IPassOneDataSvc;
+            credsSvc.Create(creds);
             return creds.Id;
         }
 
@@ -35,11 +29,11 @@ namespace PassOne.Business
         /// <param name="user">The user whose list contains the credentials in question</param>
         /// <param name="creds">The credentials to be updated</param>
         /// <param name="path">The directory path to where the app can find the PassOne data files</param>
-        public void UpdateCredentials(User user, Credentials creds, string path)
+        public void UpdateCredentials(PassOneUser user, PassOneCredentials creds)
         {
             try
             {
-                GetService(path, user).UpdateTable(creds);
+                GetService().Edit(creds);
             }
             catch (CryptographicException)
             {
@@ -54,13 +48,12 @@ namespace PassOne.Business
         /// <param name="id">The Id of the credentials to be retrieved</param>
         /// <param name="path">The directory path to where the app can find the PassOne data files</param>
         /// <returns>The requested credentials, if found; if not, returns null</returns>
-        public Credentials FindCredentials(User user, int id, string path)
+        public PassOneCredentials FindCredentials(int id)
         {
             try
             {
                 var creds =
-                    ((CredentialsSoapSerializer) GetService(Services.CredentialsSoapSerializer, path, user))
-                        .RetreiveById(id) as Credentials;
+                    (GetService(Services.CredentialsData) as IPassOneDataSvc).RetreiveById(id) as PassOneCredentials;
                 return creds;
             }
             catch (CryptographicException)
@@ -74,18 +67,22 @@ namespace PassOne.Business
         /// <param name="creds">The credentials to be deleted</param>
         /// <param name="user">The user whose list contains the credentials in question</param>
         /// <param name="path">The directory path to where the app can find the PassOne data files</param>
-        public void DeleteCredentials(Credentials creds, User user, string path)
+        public void DeleteCredentials(PassOneCredentials creds, PassOneUser user)
         {
             try
             {
-                creds.Encrypt(user.Encryption);
-                GetService(path, user).DeleteValue(creds);
-                user.CredentialsList.Remove(creds.Id);
+                creds.Encrypt(new Encryption(user.K, user.V));
+                GetService().Delete(creds);
             }
             catch (CryptographicException)
             {
                 throw new EncryptionException();
             }
+        }
+
+        public Dictionary<string, int> GetCredentialsList(int userId)
+        {
+            return ((EntityCredentialsImplementation)GetService()).GetCredentialsList(userId);
         }
 
     }

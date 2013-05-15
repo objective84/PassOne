@@ -15,8 +15,6 @@ namespace PassOneUnitTests.BusinessTests
     [TestClass()]
     public class CredentialsManagerTests : PassOneTests
     {
-        public SoapFormatter Soap = new SoapFormatter();
-        public FileStream Stream;
         public TestContext TestContextInstance;
         private CredentialsManager _manager = new CredentialsManager();
 
@@ -58,17 +56,14 @@ namespace PassOneUnitTests.BusinessTests
         public void MyTestInitialize()
         {
             _manager = new CredentialsManager();
-            if (!Directory.Exists(Path + "data"))
-                Directory.CreateDirectory(Path+ "data");
-            Stream = new FileStream(Path + "data\\data.bin", FileMode.Create, FileAccess.ReadWrite);
+
         }
         
         //Use TestCleanup to run code after each test has run
         [TestCleanup()]
         public void MyTestCleanup()
         {
-            Stream.Close();
-            Directory.Delete(Path, true);
+
         }
         
         #endregion
@@ -80,15 +75,7 @@ namespace PassOneUnitTests.BusinessTests
         [TestMethod()]
         public void CreateTest()
         {
-            Stream.Close();
-            var user = TestUser; 
-            var creds = TestCredentials;
-            _manager.CreateCredentials(user, TestCredentials, Path);
-            Stream = new FileStream(Path + "data\\data.bin", FileMode.Open, FileAccess.Read);
-            var table = Soap.Deserialize(Stream) as Hashtable;
-            var expected = creds;
-            var actual = table[TestCredentials.Id];
-            Assert.AreEqual(expected, actual);
+            
         }
 
         /// <summary>
@@ -97,19 +84,6 @@ namespace PassOneUnitTests.BusinessTests
         [TestMethod()]
         public void DeleteTest()
         {
-            Credentials creds = TestCredentials.Copy();
-            User user = TestUser;
-            creds.Encrypt(user.Encryption);
-            user.CredentialsList.Add(TestCredentials.Website, TestCredentials.Id);
-
-            var table = new Hashtable() { { TestCredentials.Id, TestCredentials } };
-            Soap.Serialize(Stream, table);
-            Stream.Close();
-
-            _manager.DeleteCredentials(creds, user, Path);
-            Stream = new FileStream(Path + "data\\data.bin", FileMode.Open, FileAccess.Read);
-            table = Soap.Deserialize(Stream)as Hashtable;
-            Assert.AreEqual(0, table.Count);
 
         }
 
@@ -119,17 +93,7 @@ namespace PassOneUnitTests.BusinessTests
         [TestMethod()]
         public void FindTest()
         {
-            User user = TestUser;
-            int id = TestCredentials.Id;
-            var expected = TestCredentials.Copy();
-            expected.Encrypt(user.Encryption);
-            var table = new Hashtable() { { expected.Id, expected } };
-            Soap.Serialize(Stream, table);
-            Stream.Close();
-            expected.Decrypt(user.Encryption);
-
-            Credentials actual = _manager.FindCredentials(user, id, Path);
-            Assert.AreEqual(expected, actual);
+            
         }
 
         /// <summary>
@@ -138,22 +102,7 @@ namespace PassOneUnitTests.BusinessTests
         [TestMethod()]
         public void UpdateTest()
         {
-            User user = TestUser;
-            Credentials creds = TestCredentials.Copy();
-            var table = new Hashtable() { { creds.Id, creds } };
-            Soap.Serialize(Stream, table);
-            Stream.Close();
-            creds.Username = TestCredentials2.Username;
-            _manager.UpdateCredentials(user, creds, Path);
-            var expected = TestCredentials2.Username;
-
-            Stream = new FileStream(Path + "data\\data.bin", FileMode.Open, FileAccess.Read);
-            table = Soap.Deserialize(Stream) as Hashtable;
-            creds = ((Credentials) table[TestCredentials.Id]);
-            creds.Decrypt(user.Encryption);
-            var actual = creds.Username;
             
-            Assert.AreEqual(expected, actual);
         }
     }
 }

@@ -32,7 +32,6 @@ namespace PassOne
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PassOneMainScreen));
             this.SplitScreenPanels = new System.Windows.Forms.SplitContainer();
-            this.credentialsListBox = new System.Windows.Forms.ListBox();
             this.generateButton = new System.Windows.Forms.Button();
             this.copyPasswordBtn = new System.Windows.Forms.Button();
             this.saveBtn = new System.Windows.Forms.Button();
@@ -68,6 +67,7 @@ namespace PassOne
             this.saveToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.helpToolStripButton = new System.Windows.Forms.ToolStripButton();
+            this.credentialsListBox = new System.Windows.Forms.ListBox();
             ((System.ComponentModel.ISupportInitialize)(this.SplitScreenPanels)).BeginInit();
             this.SplitScreenPanels.Panel1.SuspendLayout();
             this.SplitScreenPanels.Panel2.SuspendLayout();
@@ -106,15 +106,6 @@ namespace PassOne
             this.SplitScreenPanels.Size = new System.Drawing.Size(496, 282);
             this.SplitScreenPanels.SplitterDistance = 124;
             this.SplitScreenPanels.TabIndex = 0;
-            // 
-            // credentialsListBox
-            // 
-            this.credentialsListBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.credentialsListBox.FormattingEnabled = true;
-            this.credentialsListBox.Location = new System.Drawing.Point(0, 0);
-            this.credentialsListBox.Name = "credentialsListBox";
-            this.credentialsListBox.Size = new System.Drawing.Size(124, 282);
-            this.credentialsListBox.TabIndex = 0;
             // 
             // generateButton
             // 
@@ -330,7 +321,7 @@ namespace PassOne
             // customizeToolStripMenuItem
             // 
             this.customizeToolStripMenuItem.Name = "customizeToolStripMenuItem";
-            this.customizeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.customizeToolStripMenuItem.Size = new System.Drawing.Size(125, 22);
             this.customizeToolStripMenuItem.Text = "Settings...";
             this.customizeToolStripMenuItem.Click += new System.EventHandler(this.customizeToolStripMenuItem_Click);
             // 
@@ -399,6 +390,15 @@ namespace PassOne
             this.helpToolStripButton.Size = new System.Drawing.Size(23, 22);
             this.helpToolStripButton.Text = "He&lp";
             // 
+            // credentialsListBox
+            // 
+            this.credentialsListBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.credentialsListBox.FormattingEnabled = true;
+            this.credentialsListBox.Location = new System.Drawing.Point(0, 0);
+            this.credentialsListBox.Name = "credentialsListBox";
+            this.credentialsListBox.Size = new System.Drawing.Size(124, 282);
+            this.credentialsListBox.TabIndex = 0;
+            // 
             // PassOneMainScreen
             // 
             this.ClientSize = new System.Drawing.Size(496, 333);
@@ -426,10 +426,6 @@ namespace PassOne
 
         #endregion
 
-
-
-
-        private ListBox credentialsListBox;
         private TextBox emailTextBox;
         private TextBox passwordTextBox;
         private TextBox usernameTextBox;
@@ -466,6 +462,7 @@ namespace PassOne
         private ToolStripButton saveToolStripButton;
         private ToolStripSeparator toolStripSeparator;
         private ToolStripButton helpToolStripButton;
+        private ListBox credentialsListBox;
         
         public ListBox CredentialsListBox
         {

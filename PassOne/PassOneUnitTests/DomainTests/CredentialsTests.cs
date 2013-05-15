@@ -9,7 +9,7 @@ namespace PassOneUnitTests.DomainTests
     [TestClass]
     public class CredentialsTests : PassOneTests
     {
-        private readonly Credentials _encryptedTestCredentials = new Credentials(1,
+        private readonly PassOneCredentials _encryptedTestCredentials = new PassOneCredentials(1,
                                                                                  new byte[]
                                                                                      {
                                                                                          194, 223, 221, 129, 93, 130, 194,
@@ -49,15 +49,12 @@ namespace PassOneUnitTests.DomainTests
         //Constructor
         public CredentialsTests()
         {
-            TestUser.Encryption =
-                new Encryption(
-                    new byte[]
-                        {
-                            220, 1, 103, 95, 8, 241, 44, 75, 252, 211, 167, 232, 169, 41, 181, 122, 51, 118, 66, 175, 96
-                            ,
-                            102, 163, 243, 26, 232, 40, 189, 174, 181, 229, 13
-                        },
-                    new byte[] {229, 219, 79, 110, 4, 98, 121, 23, 194, 214, 43, 142, 22, 247, 128, 206});
+            TestUser.K = new byte[]
+                {
+                    220, 1, 103, 95, 8, 241, 44, 75, 252, 211, 167, 232, 169, 41, 181, 122, 51, 118, 66, 175, 96, 102, 163,
+                    243, 26, 232, 40, 189, 174, 181, 229, 13
+                };
+            TestUser.V = new byte[] {229, 219, 79, 110, 4, 98, 121, 23, 194, 214, 43, 142, 22, 247, 128, 206};
         }
 
         /// <summary>
@@ -67,7 +64,7 @@ namespace PassOneUnitTests.DomainTests
         public void TestEncrypt_Pass()
         {
             var test = TestCredentials;
-            test.Encrypt(TestUser.Encryption);
+            test.Encrypt(new Encryption(TestUser.K, TestUser.V));
 
             Assert.AreEqual(test, _encryptedTestCredentials);
         }
@@ -80,7 +77,7 @@ namespace PassOneUnitTests.DomainTests
         {
             var test = _encryptedTestCredentials;
 
-            test.Decrypt(TestUser.Encryption);
+            test.Decrypt(new Encryption(TestUser.K, TestUser.V));
             Assert.AreEqual(test, TestCredentials);
         }
 
@@ -93,7 +90,7 @@ namespace PassOneUnitTests.DomainTests
             try
             {
                 var test = _encryptedTestCredentials;
-                test.Decrypt(TestUser2.Encryption);
+                test.Decrypt(new Encryption(TestUser2.K, TestUser2.V));
                 Assert.Fail();
             }
             catch (CryptographicException)
@@ -108,11 +105,11 @@ namespace PassOneUnitTests.DomainTests
         public void TestEncryptDecryptPass()
         {
             var test = TestCredentials;
-            test.Encrypt(TestUser.Encryption);
+            test.Encrypt(new Encryption(TestUser.K, TestUser.V));
 
             Assert.AreEqual(test, TestCredentials);
 
-            TestCredentials.Decrypt(TestUser.Encryption);
+            TestCredentials.Decrypt(new Encryption(TestUser.K, TestUser.V));
             Assert.AreEqual(test, TestCredentials);
         }
 
@@ -123,11 +120,11 @@ namespace PassOneUnitTests.DomainTests
         public void TestEncryptDecryptFail()
         {
             var test = TestCredentials;
-            test.Encrypt(TestUser.Encryption);
+            test.Encrypt(new Encryption(TestUser.K, TestUser.V));
 
             Assert.AreEqual(test, _encryptedTestCredentials);
 
-            test.Decrypt(TestUser.Encryption);
+            test.Decrypt(new Encryption(TestUser.K, TestUser.V));
             Assert.AreNotEqual(test, TestCredentials2);
         }
 

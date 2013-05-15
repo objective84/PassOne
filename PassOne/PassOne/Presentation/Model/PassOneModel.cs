@@ -12,8 +12,8 @@ namespace PassOne.Presentation
    public class PassOneModel
    {
 
-       private User _user;
-       public User User { get; set; }
+       private PassOneUser _user;
+       public PassOneUser User { get; set; }
        private PassOneView _view;
        private Dictionary<string, int> _credentialsList;
        private bool _passwordHidden;
@@ -66,14 +66,14 @@ namespace PassOne.Presentation
        //Constructors
        public PassOneModel(){}
 
-       public PassOneModel(User user)
+       public PassOneModel(PassOneUser user)
        {
            _user = user;
            CredentialsList = new Dictionary<string, int>();
            Details = new Details(OnDetailsChanged);
        }
 
-       public PassOneModel(User user, Dictionary<string, int> dictionary)
+       public PassOneModel(PassOneUser user, Dictionary<string, int> dictionary)
        {
            _user = user;
            CredentialsList = dictionary;
@@ -196,9 +196,9 @@ namespace PassOne.Presentation
        /// Returns the current state of the Details object as a Credentials object
        /// </summary>
        /// <returns>Credentials representation of Details</returns>
-       public Credentials GetDetails()
+       public PassOneCredentials GetDetails()
        {
-           return new Credentials(View.MainForm.WebsiteTextBox.Text, View.MainForm.UrlTextBox.Text,
+           return new PassOneCredentials(View.MainForm.WebsiteTextBox.Text, View.MainForm.UrlTextBox.Text,
                                   View.MainForm.UsernameTextBox.Text, View.MainForm.PasswordTextBox.Text,
                                   View.MainForm.EmailTextBox.Text);
        }
@@ -207,7 +207,7 @@ namespace PassOne.Presentation
        /// Method to set the current details object with new Credential's information
        /// </summary>
        /// <param name="creds">The credentials to be placed into details</param>
-       public void SetDetails(Credentials creds)
+       public void SetDetails(PassOneCredentials creds)
        {
            Details = new Details(OnDetailsChanged);
            Details.Title = creds.Website;
@@ -244,8 +244,8 @@ namespace PassOne.Presentation
    public class PassOneModel_
    {
 
-       private User _user;
-       public User User { get; set; }
+       private PassOneUser _user;
+       public PassOneUser User { get; set; }
        private PassOneView _view;
        private Dictionary<string, int> _credentialsList;
        private bool _passwordHidden;
@@ -298,14 +298,14 @@ namespace PassOne.Presentation
        //Constructors
        public PassOneModel_() { }
 
-       public PassOneModel_(User user)
+       public PassOneModel_(PassOneUser user)
        {
            _user = user;
            CredentialsList = new Dictionary<string, int>();
            Details = new Details(OnDetailsChanged);
        }
 
-       public PassOneModel_(User user, Dictionary<string, int> dictionary)
+       public PassOneModel_(PassOneUser user, Dictionary<string, int> dictionary)
        {
            _user = user;
            CredentialsList = dictionary;
@@ -428,9 +428,9 @@ namespace PassOne.Presentation
        /// Returns the current state of the Details object as a Credentials object
        /// </summary>
        /// <returns>Credentials representation of Details</returns>
-       public Credentials GetDetails()
+       public PassOneCredentials GetDetails()
        {
-           return new Credentials(View.MainForm.WebsiteTextBox.Text, View.MainForm.UrlTextBox.Text,
+           return new PassOneCredentials(View.MainForm.WebsiteTextBox.Text, View.MainForm.UrlTextBox.Text,
                                   View.MainForm.UsernameTextBox.Text, View.MainForm.PasswordTextBox.Text,
                                   View.MainForm.EmailTextBox.Text);
        }
@@ -439,7 +439,7 @@ namespace PassOne.Presentation
        /// Method to set the current details object with new Credential's information
        /// </summary>
        /// <param name="creds">The credentials to be placed into details</param>
-       public void SetDetails(Credentials creds)
+       public void SetDetails(PassOneCredentials creds)
        {
            Details = new Details(OnDetailsChanged);
            Details.Title = creds.Website;

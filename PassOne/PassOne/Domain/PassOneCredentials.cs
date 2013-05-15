@@ -4,9 +4,9 @@ using System.Linq;
 namespace PassOne.Domain
 {
     [Serializable]
-    public class Credentials
+    public class PassOneCredentials : PassOneObject
     {
-        public int Id { get; set; }
+        public int UserId { get; set; }
         public string Website { get; set; }
         public string Url { get; set; }
         public string Username { get; set; }
@@ -20,17 +20,17 @@ namespace PassOne.Domain
         public byte[] EncryptedEmail { get; set; }
 
         //Constructors
-        public Credentials()
+        public PassOneCredentials()
         {
         }
 
-        public Credentials(int id, string title)
+        public PassOneCredentials(int id, string title)
         {
             Id = id;
             Website = title;
         }
 
-        public Credentials(string title, string url, string username, string password, string email, int id = 0 )
+        public PassOneCredentials(string title, string url, string username, string password, string email, int id = 0 )
         {
             CheckForMissingInformation(title, username, password, email);
             Id = id;
@@ -41,7 +41,7 @@ namespace PassOne.Domain
             EmailAddress = email;
         }
 
-        public Credentials(int id, byte[] title, byte[] url, byte[] username, byte[] password, byte[] email)
+        public PassOneCredentials(int id, byte[] title, byte[] url, byte[] username, byte[] password, byte[] email)
         {
             Id = id;
             Website = string.Empty;
@@ -106,10 +106,10 @@ namespace PassOne.Domain
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
             if (obj.GetType() != GetType()) return false;
-            return Equals((Credentials) obj);
+            return Equals((PassOneCredentials) obj);
         }
 
-        protected bool Equals(Credentials other)
+        protected bool Equals(PassOneCredentials other)
         {
             return Id == other.Id && string.Equals(Website, other.Website) && string.Equals(Url, other.Url) &&
                    string.Equals(Username, other.Username) && string.Equals(Password, other.Password) &&
@@ -155,9 +155,9 @@ namespace PassOne.Domain
                    "/nEmail Address: " + EmailAddress;
         }
 
-        public Credentials Copy()
+        public PassOneCredentials Copy()
         {
-            return new Credentials(Website, Url, Username, Password, EmailAddress, Id);
+            return new PassOneCredentials(Website, Url, Username, Password, EmailAddress, Id);
         }
     }
 }

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using PassOne.Domain;
 using PassOne.Service;
+using PassOne.Service.Factories;
 
 namespace PassOne.Business
 {
@@ -15,7 +16,7 @@ namespace PassOne.Business
 
         protected ManagerBase(Services service)
         {
-            Factory = new SoapFactory();
+            Factory = new EntityFactory();
             _service = service;
         }
         /// <summary>
@@ -24,9 +25,9 @@ namespace PassOne.Business
         /// <param name="path">The directory path to where the app can find the PassOne data files</param>
         /// <param name="user">Optional parameter - required for credentials services</param>
         /// <returns>The requested service</returns>
-        protected ISerializeSvc GetService(string path, User user = null)
+        protected IPassOneDataSvc GetService()
         {
-            return (ISerializeSvc)Factory.GetService(_service, path, user);
+            return (IPassOneDataSvc)Factory.GetService(_service);
         }
         /// <summary>
         /// Method for retreiving a given service from the Service Layer, used only if the requested service is of another type.
@@ -35,9 +36,9 @@ namespace PassOne.Business
         /// <param name="path">The directory path to where the app can find the PassOne data files</param>
         /// <param name="user">Optional parameter - required for credentials services</param>
         /// <returns></returns>
-        protected ISerializeSvc GetService(Services service, string path, User user = null)
+        protected IService GetService(Services service)
         {
-            return (ISerializeSvc)Factory.GetService(service, path, user);
+            return Factory.GetService(service);
         }
     }
 }

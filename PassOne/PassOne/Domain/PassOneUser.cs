@@ -4,24 +4,32 @@ using System.Collections;
 namespace PassOne.Domain
 {
     [Serializable]
-    public class User
+    public class PassOneUser : PassOneObject
     {
-        public int Id { get; set; }
         public string FirstName { get;  set; }
         public string LastName { get;  set; }
         public string Username { get;  set; }
         public string Password { get;  set; }
-        public readonly Hashtable CredentialsList;
-        public Encryption Encryption;
+        public byte[] K { get; set; }
+        public byte[] V { get; set; }
 
         //Constuctors
-        public User()
+        public PassOneUser()
         {
-            CredentialsList = new Hashtable();
-            Encryption = new Encryption();
         }
 
-        public User(int id, string first, string last, string user, string pass)
+        public PassOneUser(string first, string last, string user, string pass)
+        {
+            CheckForMissingInformation(first, last, user, pass);
+            FirstName = first;
+            LastName = last;
+            Username = user;
+            Password = pass;
+            K = Encryption.GenerateEncryptionKey();
+            V = Encryption.GenerateEncryptionVector();
+        }
+
+        public PassOneUser(int id, string first, string last, string user, string pass)
         {
             CheckForMissingInformation(first, last, user, pass);
             Id = id;
@@ -29,20 +37,19 @@ namespace PassOne.Domain
             LastName = last;
             Username = user;
             Password = pass;
-            CredentialsList = new Hashtable();
-            Encryption = new Encryption();
+            K = Encryption.GenerateEncryptionKey();
+            V = Encryption.GenerateEncryptionVector();
         }
 
-        public User(int id, string first, string last, string user, string pass, Hashtable list)
+        public PassOneUser(int id, string first, string last, string user, string pass, byte[] k, byte[] v)
         {
+            CheckForMissingInformation(first, last, user, pass);
             Id = id;
             FirstName = first;
             LastName = last;
             Username = user;
             Password = pass;
-            CredentialsList = list;
-            Encryption = new Encryption();
-        }
+        }        
 
         private void CheckForMissingInformation(string fn, string ln, string username, string password)
         {
@@ -60,30 +67,28 @@ namespace PassOne.Domain
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != GetType()) return false;
-            return Equals((User) obj);
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((PassOneUser) obj);
         }
 
-        protected bool Equals(User other)
+        protected bool Equals(PassOneUser other)
         {
-            return string.Equals(FirstName, other.FirstName) && string.Equals(LastName, other.LastName) &&
-                   string.Equals(Username, other.Username) && string.Equals(Password, other.Password);
+            return string.Equals(FirstName, other.FirstName) && string.Equals(LastName, other.LastName) && string.Equals(Username, other.Username) && string.Equals(Password, other.Password) && Equals(K, other.K) && Equals(V, other.V);
         }
 
         public override int GetHashCode()
         {
             unchecked
             {
-                var hashCode = (CredentialsList != null ? CredentialsList.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (Encryption != null ? Encryption.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (FirstName != null ? FirstName.GetHashCode() : 0);
+                int hashCode = (FirstName != null ? FirstName.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (LastName != null ? LastName.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (Username != null ? Username.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (Password != null ? Password.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (K != null ? K.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (V != null ? V.GetHashCode() : 0);
                 return hashCode;
             }
         }
-
         public override string ToString()
         {
             return "First name: " + FirstName +

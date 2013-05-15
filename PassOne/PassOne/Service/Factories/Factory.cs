@@ -11,15 +11,15 @@ namespace PassOne.Service
 {
     public enum Services
     {
-        CredentialsSoapSerializer,
-        UserSoapSerializer,
+        CredentialsData,
+        UserData,
         UserAuthenticator
     }
 
     public abstract class Factory
     {
 
-        public abstract IService GetService(Services serviceName, string path, User user = null);
+        public abstract IService GetService(Services serviceName);
 
         protected string GetImplName(string servicename)
         {

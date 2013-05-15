@@ -12,20 +12,19 @@ namespace PassOne.Business
     public class UserManager : ManagerBase
     {
         public UserManager()
-            : base(Services.UserSoapSerializer)
+            : base(Services.UserData)
         {
         }
         /// <summary>
         /// Method to create a new user in the user.bin file, takes the individual strings instead of a User object.
         /// </summary>
-        /// <param name="path">The directory path to where the app can find the PassOne data files</param>
         /// <param name="fn">The user's first name</param>
         /// <param name="ln">The user's last name</param>
         /// <param name="un">The user's chosen username</param>
         /// <param name="pass">The user's chosen password</param>
-        public void CreateUser(string path, string fn, string ln, string un, string pass)
+        public void CreateUser(string fn, string ln, string un, string pass)
         {
-            GetService(path).UpdateTable(new User(GetService(path).GetNextIdValue(), fn, ln, un, pass));
+            GetService().Create(new PassOneUser(fn, ln, un, pass));
         }
 
         /// <summary>
@@ -33,9 +32,9 @@ namespace PassOne.Business
         /// </summary>
         /// <param name="user">The user to be created</param>
         /// <param name="path">The directory path to where the app can find the PassOne data files</param>
-        public void CreateUser(User user, string path )
+        public void CreateUser(PassOneUser user)
         {
-            GetService(path).UpdateTable(user);
+            GetService().Create(user);
         }
 
         /// <summary>
@@ -43,9 +42,9 @@ namespace PassOne.Business
         /// </summary>
         /// <param name="user">The new user data</param>
         /// <param name="path">The directory path to where the app can find the PassOne data files</param>
-        public void UpdateUser(User user, string path)
+        public void UpdateUser(PassOneUser user)
         {
-            GetService(path).UpdateTable(user);
+            GetService().Edit(user);
         }
 
         /// <summary>
@@ -55,53 +54,9 @@ namespace PassOne.Business
         /// <param name="password">The password the user typed into the login form</param>
         /// <param name="path">The directory path to where the app can find the PassOne data files</param>
         /// <returns>If the authentication was successful, returns the User object associated with the provided username, otherwise throws an InvalidLoginException</returns>
-        public User Authenticate(string username, string password, string path)
+        public PassOneUser Authenticate(string username, string password)
         {
-            var authenticator = GetService(Services.UserAuthenticator, path) as IAuthenticatorSvc;
-            return authenticator.Authenticate(username, password);
-        }
-
-        /// <summary>
-        /// Method to create an IDictionary representation of the user's credentials list. Keys are the credentials title, values are the credentials Ids
-        /// </summary>
-        /// <param name="user">The user whose credentials list is being retrieved</param>
-        /// <param name="path">The directory path to where the app can find the PassOne data files</param>
-        /// <returns>An IDictionary object with the user's credentials</returns>
-        public Dictionary<string, int> GetCredentialsList(User user, string path)
-        {
-            Dictionary<string, int> dictionary = new Dictionary<string, int>();
-            var temp = new Hashtable();
-            foreach (var key in user.CredentialsList.Keys)
-                temp.Add(key, user.CredentialsList[key]);
-
-            foreach (string key in temp.Keys)
-            {
-                try
-                {
-                    Credentials credentials =
-                        ((CredentialsSoapSerializer) Factory.GetService(Services.CredentialsSoapSerializer, path, user))
-                            .RetreiveById((int) user.CredentialsList[key]) as Credentials;
-                    dictionary.Add(credentials.Website, credentials.Id);
-                }
-                catch (CredentialsNotFoundException e)
-                {
-                    foreach (var key1 in user.CredentialsList.Keys)
-                    {
-                        if (user.CredentialsList[key1].Equals(e.IdNotFound))
-                        {
-                            user.CredentialsList.Remove(key1);
-                            break;
-                        }
-
-                    }
-                    UpdateUser(user, path);
-                }
-                catch (ArgumentException e)
-                {
-                    
-                }
-            }
-            return dictionary;
+            return ((EntityUserImplementation) GetService()).Authenticate(username, password);
         }
     }
 }

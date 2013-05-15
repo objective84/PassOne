@@ -21,7 +21,6 @@ namespace PassOne.Presentation
     }
    public class PassOneController
    {
-       public static string Path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\PassOne\\";
        private PassOneModel _model;
        public PassOneModel Model
        {
@@ -64,9 +63,8 @@ namespace PassOne.Presentation
        public void CredentialsList_SelectedIndexChanged(object sender, EventArgs e)
        {
            if (((ListBox) sender).SelectedItem == null) return;
-           Model.SetDetails(_credentialsManager.FindCredentials(Model.User,
-                                                                Model.CredentialsList[
-                                                                    ((ListBox) sender).SelectedItem.ToString()], Path));
+           Model.SetDetails(
+               _credentialsManager.FindCredentials(Model.CredentialsList[((ListBox) sender).SelectedItem.ToString()]));
        }
 
        /// <summary>
@@ -109,10 +107,11 @@ namespace PassOne.Presentation
            if (MessageBox.Show("Are you sure you want to delete this credentials entry?", "Warning", MessageBoxButtons.YesNo) == DialogResult.Yes)
            {
                var creds = Model.GetDetails();
+               creds.UserId = Model.User.Id;
                Model.RemoveItemFromCredentialsListBox(creds.Website);
                creds.Id = Model.CredentialsList[creds.Website];
                Model.CredentialsList.Remove(creds.Website);
-               _credentialsManager.DeleteCredentials(creds, Model.User, Path);
+               _credentialsManager.DeleteCredentials(creds, Model.User);
                Model.Details.Clear();
            }
        }
@@ -163,10 +162,14 @@ namespace PassOne.Presentation
            try
            {
                var website = Model.GetDetails().Website;
-               var id = _credentialsManager.CreateCredentials(Model.User, Model.GetDetails(), Path);
+               var creds = Model.GetDetails();
+               creds.UserId = Model.User.Id;
+               creds.Encrypt(new Encryption(Model.User.K, Model.User.V));
+               var id = _credentialsManager.CreateCredentials(creds);
                Model.CredentialsList.Add(website, id);
                Model.UpdateViewListBox();
                Model.Details.Clear();
+               MessageBox.Show("Credentials Saved");
            }
            catch (MissingInformationException e)
            {
@@ -233,7 +236,7 @@ namespace PassOne.Presentation
        public void RegisterUser(string fn, string ln, string un, string pw, string confirm)
        {
            if (pw != confirm) throw new PasswordDoesNotMatchConfirmationException();
-           _userManager.CreateUser(fn, ln, un, pw, Path);
+           _userManager.CreateUser(fn, ln, un, pw);
            Login(un, pw);
        }
        
@@ -246,9 +249,9 @@ namespace PassOne.Presentation
        {
            try
            {
-               Model.User = _userManager.Authenticate(username, password, Path);
+               Model.User = _userManager.Authenticate(username, password);
                ModelState = ModelStates.Main;
-               Model.CredentialsList = _userManager.GetCredentialsList(Model.User, Path);
+               Model.CredentialsList = _credentialsManager.GetCredentialsList(Model.User.Id);
            }
            catch (InvalidLoginException)
            {
